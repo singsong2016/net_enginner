@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+</head>
+
+<body>
+<p>开启路由功能<span lang="EN-US" xml:lang="EN-US"> </span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config)#ip routing</span></p>
+<p><span lang="EN-US" xml:lang="EN-US"> </span></p>
+<p><span lang="EN-US" xml:lang="EN-US">1</span>、首先设置<span lang="EN-US" xml:lang="EN-US">vlan</span>：<span lang="EN-US" xml:lang="EN-US"> </span></p>
+<p>设置<span lang="EN-US" xml:lang="EN-US">vlan 2</span>、<span lang="EN-US" xml:lang="EN-US">3</span>、<span lang="EN-US" xml:lang="EN-US">4</span>，如果不设，默认为<span lang="EN-US" xml:lang="EN-US">vlan 1</span>，其实不设也行，只需通信间不在同一<span lang="EN-US" xml:lang="EN-US">vlan</span>即可，如<span lang="EN-US" xml:lang="EN-US">pc0</span>、<span lang="EN-US" xml:lang="EN-US">pc1</span>可以不设，则为<span lang="EN-US" xml:lang="EN-US">vlan 1</span>，即<span lang="EN-US" xml:lang="EN-US">vlan 1</span>、<span lang="EN-US" xml:lang="EN-US">3</span>、<span lang="EN-US" xml:lang="EN-US">4</span>间通信。但大部分情况为了区别，要设置。<span lang="EN-US" xml:lang="EN-US"> </span></p>
+<p><span lang="EN-US" xml:lang="EN-US"> </span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch&gt;enable</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch#configure terminal</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Enter configuration commands, one per line. End with CNTL/Z.</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config)#vlan 2</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-vlan)#exit</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config)#vlan 3</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-vlan)#exit</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config)#vlan 4</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-vlan)#exit</span></p>
+<p><span lang="EN-US" xml:lang="EN-US"> </span></p>
+<p><span lang="EN-US" xml:lang="EN-US">2</span>、设置端口属与哪个<span lang="EN-US" xml:lang="EN-US">vlan</span></p>
+<p>本例中 端口<span lang="EN-US" xml:lang="EN-US">0/1</span>、<span lang="EN-US" xml:lang="EN-US">0/2</span>属于<span lang="EN-US" xml:lang="EN-US">vlan2</span>，端口<span lang="EN-US" xml:lang="EN-US">0/3</span>、<span lang="EN-US" xml:lang="EN-US">0/4</span>属于<span lang="EN-US" xml:lang="EN-US">vlan3</span>，端口<span lang="EN-US" xml:lang="EN-US">0/24</span>属于<span lang="EN-US" xml:lang="EN-US">vlan 4</span></p>
+<p>设置如下：<span lang="EN-US" xml:lang="EN-US"> </span></p>
+<p><span lang="EN-US" xml:lang="EN-US"> </span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config)#in fa 0/1</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#swi</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#switchport a</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#switchport access vlan 2</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#exit</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config)#in fa 0/2</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#sw</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#switchport a vlan 2</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#exit</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config)#in fa 0/3</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#swi</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#switchport a</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#switchport access vlan 3</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#exit</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config)#in fa 0/4</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#swi</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#switchport a</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#switchport access vlan 3</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#exit</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config)#in fa 0/24</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#swi</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#switchport a</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#switchport access vlan 4</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#</span></p>
+<p><span lang="EN-US" xml:lang="EN-US"> </span></p>
+<p><span lang="EN-US" xml:lang="EN-US">3</span>、设置<span lang="EN-US" xml:lang="EN-US">vlan ip</span></p>
+<p><span lang="EN-US" xml:lang="EN-US"> </span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config)#interface vlan 2</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#ip add 192.168.1.254 255.255.255.0</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#exit</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config)#in vlan 3</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#ip add 192.168.2.254 255.255.255.0</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#exit</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config)#in vlan 4</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#ip add 192.168.3.254 255.255.255.0</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">Switch(config-if)#</span></p>
+<p><span lang="EN-US" xml:lang="EN-US"> </span></p>
+<p><span lang="EN-US" xml:lang="EN-US"> </span></p>
+<p>设置好后，<span lang="EN-US" xml:lang="EN-US">vlan 2</span>、<span lang="EN-US" xml:lang="EN-US">3</span>、<span lang="EN-US" xml:lang="EN-US">4</span>之间的主机即可通信。<span lang="EN-US" xml:lang="EN-US"> </span></p>
+<p><span lang="EN-US" xml:lang="EN-US"> </span></p>
+<p><span lang="EN-GB" xml:lang="EN-GB">PVID</span></p>
+<p><span lang="EN-GB" xml:lang="EN-GB">PVID</span>为<span lang="EN-GB" xml:lang="EN-GB">Port-base Vlan ID</span>，也就是端口的虚拟局域网<span lang="EN-GB" xml:lang="EN-GB">ID</span>号，关系到端口收发数据帧时的<span lang="EN-GB" xml:lang="EN-GB">VLAN TAG </span>标记。<span lang="EN-GB" xml:lang="EN-GB"> </span></p>
+<p>目录<span lang="EN-GB" xml:lang="EN-GB"> </span></p>
+<p><span lang="EN-GB" xml:lang="EN-GB">1.     1 </span>简介<span lang="EN-GB" xml:lang="EN-GB"> </span></p>
+<p><span lang="EN-GB" xml:lang="EN-GB">2.     2 </span>端口<span lang="EN-GB" xml:lang="EN-GB"> </span></p>
+<p>简介<span lang="EN-GB" xml:lang="EN-GB"> </span></p>
+<p>通俗的讲，指的是<span lang="EN-GB" xml:lang="EN-GB">native Vlan</span>，即不打<span lang="EN-GB" xml:lang="EN-GB">Vlan</span>标记的<span lang="EN-GB" xml:lang="EN-GB">Vlan</span>，一般默认为<span lang="EN-GB" xml:lang="EN-GB">Vlan 1</span>。<span lang="EN-GB" xml:lang="EN-GB"> </span></p>
+<p>去超市买东西有个扫描设备扫描一下商品上的标签，然后价格就会出现<span lang="EN-GB" xml:lang="EN-GB"> </span></p>
+<p>商品上的标签就好比一个标记，而扫描器就好比解读这个标记的设备<span lang="EN-GB" xml:lang="EN-GB"> </span></p>
+<p><span lang="EN-GB" xml:lang="EN-GB">PVID</span>和<span lang="EN-GB" xml:lang="EN-GB">VID</span>（标记）之间的关系就好比 扫描器和商品标记的关系，不同的是<span lang="EN-GB" xml:lang="EN-GB">PVID</span>不仅用来解析<span lang="EN-GB" xml:lang="EN-GB">ViD</span>也用来生成<span lang="EN-GB" xml:lang="EN-GB">VID</span></p>
+<p>终端设备比如电脑<span lang="EN-GB" xml:lang="EN-GB">PC</span>等，自身不具备产生标记的能力，因为数据帧格式是固定的，发送端自身不知道自身是哪个<span lang="EN-GB" xml:lang="EN-GB">VLAN</span>成员那么他自己当然不可能在帧内标记<span lang="EN-GB" xml:lang="EN-GB">VLANid</span>了，标记和解标记都是由中间设备来完成的<span lang="EN-GB" xml:lang="EN-GB">.</span></p>
+<p>交换机上的端口分为两种。一种是接入层端口直连设备的，叫做<span lang="EN-GB" xml:lang="EN-GB">Access</span>；一种是交换机和交换机之间的端口负责汇聚的叫做<span lang="EN-GB" xml:lang="EN-GB">Trunk</span>。另外华为和华<span lang="EN-GB" xml:lang="EN-GB">3</span>的设备还有一种是<span lang="EN-GB" xml:lang="EN-GB">Access</span>与<span lang="EN-GB" xml:lang="EN-GB">Trunk</span>混合的模式，叫做<span lang="EN-GB" xml:lang="EN-GB">Hybrid</span>，这种端口类型是<span lang="EN-GB" xml:lang="EN-GB">Cisco</span>没有的。<span lang="EN-GB" xml:lang="EN-GB"> </span></p>
+<p>端口<span lang="EN-GB" xml:lang="EN-GB"> </span></p>
+<p><span lang="EN-GB" xml:lang="EN-GB">Access</span>端口负责接终端设备，它收到一个帧的时候，如果这个帧没有标记它就用自己的<span lang="EN-GB" xml:lang="EN-GB">pvid</span>给他打上标记，它在发出一个帧时如果<span lang="EN-GB" xml:lang="EN-GB">VID=PVID</span>就去掉标记以保证传送给终端设备的帧没有被变动过，<span lang="EN-GB" xml:lang="EN-GB">pvid</span>是在划分<span lang="EN-GB" xml:lang="EN-GB">vlan</span>时候每个端口都有的属性，默认情况下思科交换机中每个端口初始<span lang="EN-GB" xml:lang="EN-GB">pvid</span>是<span lang="EN-GB" xml:lang="EN-GB">1</span>，表示他是<span lang="EN-GB" xml:lang="EN-GB">vlan1</span>的成员们如果你给他划分了其他<span lang="EN-GB" xml:lang="EN-GB">VLAN</span>那么<span lang="EN-GB" xml:lang="EN-GB">PVID</span>相应会发生更改<span lang="EN-GB" xml:lang="EN-GB"> </span></p>
+<p><span lang="EN-GB" xml:lang="EN-GB">ACCESS</span>端口的特点是 只允许符合<span lang="EN-GB" xml:lang="EN-GB">PVID</span>的流量通过。<span lang="EN-GB" xml:lang="EN-GB"> </span></p>
+<p><span lang="EN-GB" xml:lang="EN-GB">Trunk</span>的意思是，它是一条中继链路，允许各种<span lang="EN-GB" xml:lang="EN-GB">VLAN</span>通过。它的规则和<span lang="EN-GB" xml:lang="EN-GB">Access</span>差不多，当收到一个没有<span lang="EN-GB" xml:lang="EN-GB">tag</span>的标记的时候就用自己的<span lang="EN-GB" xml:lang="EN-GB">pvid</span>给他标记，当发送一个帧时候如果<span lang="EN-GB" xml:lang="EN-GB">vid=pvid</span>则去掉<span lang="EN-GB" xml:lang="EN-GB">pvid</span>，与<span lang="EN-GB" xml:lang="EN-GB">Access</span>不同的是，<span lang="EN-GB" xml:lang="EN-GB">Trunk</span>有一个属于自己的本征<span lang="EN-GB" xml:lang="EN-GB">VLAN</span>，用来发送一些<span lang="EN-GB" xml:lang="EN-GB">cdp</span>，<span lang="EN-GB" xml:lang="EN-GB">bpdu</span>等交换机间联系的数据或者管理流量，从交换机自身产生的帧在发出去的时候是不会带标记的，因为<span lang="EN-GB" xml:lang="EN-GB">VID=pvid</span>所以标记被去掉，而对端接收到没有标记的帧时候就会用自身本征<span lang="EN-GB" xml:lang="EN-GB">VLAN</span>的信息给他加上标记，然后查看交换表如果发现目的地址是自己则去掉标记，如果发现目的<span lang="EN-GB" xml:lang="EN-GB">mac</span>地址不是自己则继续转发给其他<span lang="EN-GB" xml:lang="EN-GB">Trunk</span>同时去掉标记（因为一个交换机只有一个本征<span lang="EN-GB" xml:lang="EN-GB">VLAN</span>所有<span lang="EN-GB" xml:lang="EN-GB">pvid=vid</span>去掉标记）<span lang="EN-GB" xml:lang="EN-GB"> </span></p>
+<p><span lang="EN-GB" xml:lang="EN-GB">Hybrid</span>是<span lang="EN-GB" xml:lang="EN-GB">Access</span>与<span lang="EN-GB" xml:lang="EN-GB">Trunk</span>的混合模式，它允许<span lang="EN-GB" xml:lang="EN-GB">VID=pvid</span>。<span lang="EN-GB" xml:lang="EN-GB">Hybrid</span>与<span lang="EN-GB" xml:lang="EN-GB">Trunk</span>一样，在该端口上可以传送多个<span lang="EN-GB" xml:lang="EN-GB">vlan</span>的包，一般用于交换机与交换机之间，或者交换机与服务器之间的链接。如果收到的数据包不带<span lang="EN-GB" xml:lang="EN-GB">vlan</span>，则加上<span lang="EN-GB" xml:lang="EN-GB">pvid</span>进行转发；如果收到的数据包带<span lang="EN-GB" xml:lang="EN-GB">vlan</span>，则判断该端口是否允许该<span lang="EN-GB" xml:lang="EN-GB">vlan</span>进入，如果可以则进行转发，否则丢弃。<span lang="EN-GB" xml:lang="EN-GB"> </span></p>
+<p><span lang="EN-GB" xml:lang="EN-GB"> </span></p>
+<p><span lang="EN-GB" xml:lang="EN-GB"> </span></p>
+<p><span lang="EN-GB" xml:lang="EN-GB"> </span></p>
+<p><span lang="EN-US" xml:lang="EN-US"> </span></p>
+</body>
+</html>

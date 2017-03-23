@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+</head>
+
+<body>
+<p> <br />
+  BROADCAST STORM ACCURS WHEN THE RETICLE SHORT CIRCUIT<br />
+  <br />
+  主机位0代表网段<br />
+  <br />
+  协议对应端口号 就像语言文字对应实际动作<br />
+  IP<br />
+  A类<br />
+  1.0.0.0 到126.0.0.0 0.0.0.0 和127.0.0.0保留<br />
+  B <br />
+  128.1.0.0到191.254.0.0128.0.0.0和191.255.0.0保留<br />
+  C <br />
+  192.0.1.0 到223.255.254.0192.0.0.0和223.255.255.0保留<br />
+  D<br />
+  224.0.0.0到239.255.255.255用于多点广播<br />
+  E <br />
+  240.0.0.0到255.255.255.254保留255.255.255.255用于广播<br />
+  <br />
+  路由器<br />
+  网络路由选择设备<br />
+  两个以上IP<br />
+  至少内外网各一个<br />
+  <br />
+  能连网但<br />
+  PING百度瞬间找不到主机<br />
+  三个DNS命令<br />
+  ipconfig /flushdns   ipconfig /registerdns    netsh winsock reset<br />
+  重启<br />
+  <br />
+  <br />
+  VPN<br />
+  隧道<br />
+  公网传输<br />
+  数据加密<br />
+  <br />
+  Netsh命令行设置IP与DNS<br />
+  1.设置动态IP(DHCP自动获取IP)<br />
+  [span]netsh interface ip set address &quot;本地连接&quot; dhcp<br />
+  2.设置指定的IP，此处以设置本机IP为10.16.15.226，子网掩码为255.255.255.0，网关IP为10.16.15.1为例<br />
+  [span]netsh interface ip set address &quot;本地连接&quot; static 10.16.15.226 255.255.255.0 10.16.15.1<br />
+  3.设置动态DNS(DHCP自动获取DNS)<br />
+  [span]netsh interface ip set dns &quot;本地连接&quot; dhcp<br />
+  4.设置指定的DNS，此处以设置DNS为210.45.240.10为例<br />
+  [span]netsh interface ip set dns &quot;本地连接&quot;static 210.45.240.10<br />
+  <br />
+  查看网络配置<br />
+  netsh interface ip show {选项}<br />
+  {选项}可以是：<br />
+  address - 显示 IP 地址配置<br />
+  config - 显示 IP 地址和更多信息<br />
+  dns - 显示 DNS 服务器地址<br />
+  icmp - 显示 ICMP 统计<br />
+  interface - 显示 IP 接口统计<br />
+  ipaddress - 显示当前 IP 地址<br />
+  ipnet - 显示 IP 的网络到媒体的映射<br />
+  ipstats - 显示 IP 统计<br />
+  joins - 显示加入的多播组<br />
+  offload - 显示卸载信息<br />
+  tcpconn - 显示 TCP 连接<br />
+  tcpstats - 显示 TCP 统计<br />
+  udpconn - 显示 UDP 连接<br />
+  udpstats - 显示 UDP 统计<br />
+  wins - 显示 WINS 服务器地址<br />
+  <br />
+  vlan<br />
+  物理局域网中网段的进一步细分<br />
+  网段是关键词<br />
+  <br />
+  世界IP分布<br />
+  <br />
+  <br />
+</p>
+<p></p>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+</head>
+
+<body>
+<p>路由跟踪traceroute ip<br />
+  设置名称和账号 <br />
+  Route(config)#hostname jdc-1812<br />
+  Route(config)#username jdc password 123456<br />
+  Route(config)#en password 123456<br />
+  router(config)#enable secret 密码 -&gt; 这个密码是进入特权模式的密码,是一定要的 <br />
+  router(config)#line vty 0 4<br />
+  router(config-line)password 密码 -&gt;这个密码是telnet<br />
+  密码 <br />
+</p>
+<p>添加3389端口映射 <br />
+  ip nat inside source static tcp 172.16.1.11 3389 222.86.157.117 3389 extendable</p>
+<p>巴斯巴遵义连接深圳VPN设置内容 <br />
+  interface Tunnel31004<br />
+  description connect to SZA-VPNPE1<br />
+  ip address 10.10.24.90 255.255.255.252<br />
+  ip mtu 1500<br />
+  ip tcp adjust-mss 1400<br />
+  tunnel source 222.86.157.117<br />
+  tunnel destination 211.154.144.106<br />
+  !</p>
+<p>interface GigabitEthernet0/0<br />
+  ip address 222.86.157.118 255.255.255.192 secondary<br />
+  ip address 222.86.157.117 255.255.255.192<br />
+  ip nat outside<br />
+  ip virtual-reassembly in<br />
+  duplex auto<br />
+  speed auto<br />
+  !<br />
+  interface GigabitEthernet0/1<br />
+  description to-LAN<br />
+  ip address 172.16.1.253 255.255.255.0<br />
+  ip nat inside<br />
+  ip virtual-reassembly in<br />
+  standby 1 ip 172.16.1.254<br />
+  standby 1 preempt<br />
+  standby 1 track 1 decrement 95<br />
+  duplex auto<br />
+  speed auto<br />
+  !</p>
+<p>ip nat inside source list LAN_NETWORK interface GigabitEthernet0/0 overload<br />
+  ip route 0.0.0.0 0.0.0.0 172.16.1.1<br />
+  ip route 59.37.96.63 255.255.255.255 222.86.157.65<br />
+  ip route 188.188.0.0 255.255.0.0 Tunnel31004 10.10.24.89<br />
+  ip route 192.168.1.0 255.255.255.0 Tunnel31004 10.10.24.89<br />
+  ip route 192.168.55.250 255.255.255.255 Tunnel31004 10.10.24.89<br />
+  ip route 202.104.174.185 255.255.255.255 222.86.157.65<br />
+  ip route 211.154.144.106 255.255.255.255 222.86.157.65<br />
+  !<br />
+  ip access-list extended LAN_NETWORK<br />
+  permit ip 172.16.1.0 0.0.0.255 any<br />
+  !</p>
+<p>清除设置 <br />
+  Router#erase startup-config //这个是清除命令 <br />
+  Erasing the nvram filesystem will remove all configuration files! Continue? [confirm]<br />
+  [OK]<br />
+  Erase of nvram: complete<br />
+  %SYS-7-NV_BLOCK_INIT: Initialized the geometry of nvram</p>
+<p>Router#reload //这个是重启 并选择不保存 <br />
+</p>
+<p>配置固定IP上网 <br />
+  固定IP上网配置： <br />
+  现有客户需要使用思科的2600路由器上网，用户为10M光纤，申请了16个固定IP，IP为61.161.xxx.2-61.161.xxx.14, 默认网关是61.161.xxx.1。内网IP段192.168.1.0，客户要实现192.168.1.50-192.168.1.60之间的IP可以上网，其余的不可以。 <br />
+  路由器e0/0接口为WAN外网接口，e0/1为LAN内网接口 <br />
+  必须一 设置端口IP和端口工作方式 <br />
+  interface e0/0<br />
+  ip address 61.161.xxx.2 255.255.255.240 //这里可以使用61.161.xxx.2-14个地址中的任意一个，这里就用2<br />
+  ip nat outside<br />
+  full-duplex<br />
+  no shutdown<br />
+  interface e0/1<br />
+  ip address 192.168.1.1 255.255.255.0<br />
+  ip nat inside<br />
+  full-duplex<br />
+  no shutdown<br />
+  必须二 //设置放行的IP地址列表 <br />
+  access-list 1 permit host 192.168.1.50<br />
+  access-list 1 permit host 192.168.1.51<br />
+  或者放行一个网段 192.168.1.0 0.0.0.255</p>
+<p>必须三 设置地址转换方式 <br />
+  ip nat pool intoout 61.161.xxx.2 61.161.xxx.2 netmask 255.255.255.240 //这里复用61.161.xxx.2的地址。 <br />
+  也可以这样写：ip nat pool intoout 61.161.xxx.2 61.161.xxx.14 netmask 255.255.255.252 这样写之后，从地址池里选择任意可用的外网ip 转换。 <br />
+  ip nat inside source list 1 pool intoout Overload<br />
+  必须四 设置默认网关 <br />
+  Route#ip route 0.0.0.0 0.0.0.0 61.161.xxx.1 //默认网关，即电信端的地址，下一跳地址。 </p>
+<p>局域网dhcp可选 <br />
+  如果开启DHCP，则需要这样配置： <br />
+  route#ip dhcp pool ABC回车 <br />
+  route(dhcp-config)#network 192.168.1.0<br />
+  route(dhcp-config)#default-router 192.168.1.1<br />
+  route(dhcp-config)#dns-server 202.96.64.68<br />
+  route#ip dhcp excluded-address 192.168.1.1 需要除去网关的地址，要不就冲突了。 <br />
+  增加 access-list 1 permit 192.168.1.0 0.0.0.255就可以了。 </p>
+<p>设置vlan vlan也属于interface<br />
+  Config<br />
+  Interface vlan 1-1000<br />
+  IP address<br />
+  Interface f2<br />
+  switchport access vlan 1 将vlan1划入交换端口f2<br />
+</p>
+<p>保存配置内容 <br />
+  Route#write<br />
+</p>
+<p>思科路由器点到点VPN配置 <br />
+  R1路由器上连通性配置 </p>
+<p>R1（config）#interface e0</p>
+<p>R1（config-if）#ip address 10.1.1.1 255.255.255.0</p>
+<p>R1（config-if）#no shutdown</p>
+<p>R1（config）#interface e1</p>
+<p>R1（config-if）#ip address 1.1.1.1 255.255.255.0</p>
+<p>R1（config-if）#no shutdown</p>
+<p>R1（config）#ip route 0.0.0.0 0.0.0.0 10.1.1.2</p>
+<p>R2路由器上连通性配置 </p>
+<p>R2（config）#interface e0</p>
+<p>R2（config-if）#ip address 1.1.1.2 255.255.255.0</p>
+<p>R2（config-if）#no shutdown</p>
+<p>R2（config）#interface e1</p>
+<p>R2（config-if）#ip address 2.2.2.2 255.255.255.0</p>
+<p>R2（config-if）#no shutdown</p>
+<p>R2（config）#ip route 0.0.0.0 0.0.0.0 10.1.1.1</p>
+<p>R1路由器IpSec配置 </p>
+<p>R1（config）#crypto isakmp enable （optional）默认启用 </p>
+<p>R1路由器IpSec isakmp 配置（阶段一的策略） </p>
+<p>R1（config）#crypto isakmp policy 10</p>
+<p>R1（config-isakmp）#hash md5</p>
+<p>R1（config-isakmp）#authentication pre-share</p>
+<p>R1（config-isakmp）#encryption 3des</p>
+<p>R1（config-isakmp）#group 2</p>
+<p>R1路由器Pre-Share认证配置 </p>
+<p>R1（config）#crypto isakmp key cisco address 10.1.1.2</p>
+<p>R1路由器IpSec变换集配置（阶段二的策略） </p>
+<p>R1（config）#crypto ipsec transform-set cisco esp-3des esp-md5-hmac R1 （cfg-crypto-trans）#mode tunnel</p>
+<p>R1路由器加密图的配置 </p>
+<p>R1（config）#crypto map cisco 10 ipsec-isakmp</p>
+<p>R1（config-crypto-map）#set peer 10.1.1.2</p>
+<p>R1（config-crypto-map）#set transform-set cisco</p>
+<p>R1（config-crypto-map）#match address 101</p>
+<p>R1路由器定义感兴趣流量 到此21号 </p>
+<p>R1（config）#access-list 101 permit ip 1.1.1.0 0.0.0.255 2.2.2.0 0.0.0.255 R1路由器加密图绑定到接口 </p>
+<p>R1（config）#interface e0</p>
+<p>R1（config-if）#crypto map cisco</p>
+<p>4、R2路由器IpSec配置 </p>
+<p>R2（config）#crypto isakmp enable （optional）默认启用 </p>
+<p>R2路由器IpSec isakmp 配置（阶段一的策略） </p>
+<p>R2（config）#crypto isakmp policy 10</p>
+<p>R2（config-isakmp）#hash md5</p>
+<p>R2（config-isakmp）#authentication pre-share</p>
+<p>R2（config-isakmp）#encryption 3des</p>
+<p>R2（config-isakmp）#group 2</p>
+<p>R2路由器Pre-Share认证配置 </p>
+<p>R2（config）#crypto isakmp key cisco address 10.1.1.1</p>
+<p>R2路由器IpSec变换集配置（阶段二的策略） </p>
+<p>R2（config）#crypto ipsec transform-set cisco esp-3des esp-md5-hmac</p>
+<p>R2（cfg-crypto-trans）#mode tunnel</p>
+<p>R2路由器加密图的配置 </p>
+<p>R2（config）#crypto map cisco 10 ipsec-isakmp</p>
+<p>R2（config-crypto-map）#set peer 10.1.1.1</p>
+<p>R2（config-crypto-map）#set transform-set cisco</p>
+<p>R2（config-crypto-map）#match address 101</p>
+<p>R2路由器定义感兴趣流量 </p>
+<p>R2（config）#access-list 101 permit ip 2.2.2.0 0.0.0.255 1.1.1.0 0.0.0.255</p>
+<p>R2路由器加密图绑定到接口 </p>
+<p>R2（config）#interface e0</p>
+<p>R2（config-if）#crypto map cisco</p>
+<p>以上就是思科路由器配置站点到站点VPN的过程， 谢谢阅读，希望能帮到大家，请继续关注脚本之家，我们会努力分享更多优秀的文章。 </p>
+<p>&nbsp;</p>
+<p>Cisco 路由器（Router）和交换机（Switch）命令详解 <br />
+  2010年06月25日 星期五 14:20<br />
+  Cisco路由器交换机配置命令详解 <br />
+  1. 交换机支持的命令： 交换机基本状态： <br />
+  switch: ；ROM状态， 路由器是rommon&gt; hostname&gt; ；用户模式 hostname# ；特权模式 <br />
+  hostname(config)# ；全局配置模式 hostname(config-if)# ；接口状态 <br />
+  交换机口令设置： <br />
+  switch&gt;enable ；进入特权模式 <br />
+  switch#config terminal ；进入全局配置模式 switch(config)#hostname ；设置交换机的主机名 switch(config)#enable secret xxx ；设置特权加密口令 switch(config)#enable password xxa ；设置特权非密口令 switch(config)#line console 0 ；进入控制台口 switch(config-line)#line vty 0 4 ；进入虚拟终端 switch(config-line)#login ；允许登录 <br />
+  switch(config-line)#password xx ；设置登录口令xx switch#exit ；返回命令 </p>
+<p>交换机VLAN设置： <br />
+  switch#vlan database ；进入VLAN设置 switch(vlan)#vlan 2 ；建VLAN 2 switch(vlan)#no vlan 2 ；删vlan 2 switch(config)#int f0/1 ；进入端口1<br />
+  switch(config-if)#switchport access vlan 2 ；当前端口加入vlan 2 switch(config-if)#switchport mode trunk ；设置为干线 switch(config-if)#switchport trunk allowed vlan 1，2 ；设置允许的vlan<br />
+  switch(config-if)#switchport trunk encap dot1q ；设置vlan 中继 switch(config)#vtp domain ；设置发vtp域名 switch(config)#vtp password ；设置发vtp密码 switch(config)#vtp mode server ；设置发vtp模式 switch(config)#vtp mode client ；设置发vtp模式 </p>
+<p>交换机设置IP地址： <br />
+  switch(config)#interface vlan 1 ；进入vlan 1 switch(config-if)#ip address ；设置IP地址 switch(config)#ip default-gateway ；设置默认网关 switch#dir flash: ；查看闪存 <br />
+  交换机显示命令： <br />
+  switch#write ；保存配置信息 switch#show vtp ；查看vtp配置信息 switch#show run ；查看当前配置信息 switch#show vlan ；查看vlan配置信息 switch#show interface ；查看端口信息 switch#show int f0/0 ；查看指定端口信息 <br />
+  2. 路由器支持的命令： 路由器显示命令： <br />
+  router#show run ；显示配置信息 router#show interface ；显示接口信息 router#show ip route ；显示路由信息 router#show cdp nei ；显示邻居信息 router#reload ；重新起动 <br />
+  路由器口令设置： <br />
+  router&gt;enable ；进入特权模式 <br />
+  router#config terminal ；进入全局配置模式 router(config)#hostname ；设置交换机的主机名 router(config)#enable secret xxx ；设置特权加密口令 </p>
+<p>router(config)#enable password xxb ；设置特权非密口令 router(config)#line console 0 ；进入控制台口 router(config-line)#line vty 0 4 ；进入虚拟终端 router(config-line)#login ；要求口令验证 <br />
+  router(config-line)#password xx ；设置登录口令xx router(config)#(Ctrl+z) ； 返回特权模式 router#exit ；返回命令 <br />
+  路由器配置： <br />
+  router(config)#int s0/0 ；进入Serail接口 router(config-if)#no shutdown ；激活当前接口 router(config-if)#clock rate 64000 ；设置同步时钟 router(config-if)#ip address ；设置IP地址 <br />
+  router(config-if)#ip address second ；设置第二个IP router(config-if)#int f0/0.1 ；进入子接口 router(config-subif.1)#ip address ；设置子接口IP<br />
+  router(config-subif.1)#encapsulation dot1q ；绑定vlan中继协议 router(config)#config-register 0x2142 ；跳过配置文件 router(config)#config-register 0x2102 ；正常使用配置文件 router#reload ；重新引导 <br />
+  路由器文件操作： <br />
+  router#copy running-config startup-config ；保存配置 router#copy running-config tftp ；保存配置到tftp router#copy startup-config tftp ；开机配置存到tftp router#copy tftp flash: ；下传文件到flash router#copy tftp startup-config ；下载配置文件 <br />
+  ROM状态： <br />
+  Ctrl+Break ；进入ROM监控状态 rommon&gt;confreg 0x2142 ；跳过配置文件 rommon&gt;confreg 0x2102 ；恢复配置文件 rommon&gt;reset ； <br />
+  重新引导 <br />
+  rommon&gt;copy xmodem: flash: ；从console传输文件 <br />
+  rommon&gt;IP_ADDRESS=10.65.1.2 ；设置路由器IP rommon&gt;IP_SUBNET_MASK=255.255.0.0 ；设置路由器掩码 rommon&gt;TFTP_SERVER=10.65.1.1 ；指定TFTP服务器IP rommon&gt;TFTP_FILE=c2600.bin ；指定下载的文件 rommon&gt;tftpdnld ；从tftp下载 rommon&gt;dir flash: ；查看闪存内容 rommon&gt;boot ；引导IOS 静态路由： <br />
+  router#show frame map ； <br />
+  显示映射基本访问控制列表： <br />
+  router(config)#access-list permit|deny router(config)#interface ；default:deny any<br />
+  router(config-if)#ip access-group in|out ；defaultut 例1： <br />
+  router(config)#access-list 4 permit 10.8.1.1 router(config)#access-list 4 deny 10.8.1.0 0.0.0.255 router(config)#access-list 4 permit 10.8.0.0 0.0.255.255 router(config)#access-list 4 deny 10.0.0.0 0.255.255.255 router(config)#access-list 4 permit any router(config)#int f0/0<br />
+  router(config-if)#ip access-group 4 in <br />
+  扩展访问控制列表： <br />
+  access-list permit|deny icmp [type] access-list permit|deny tcp [port] 例3： <br />
+  router(config)#access-list 101 deny icmp any 10.64.0.2 0.0.0.0 echo</p>
+<p>router(config)#access-list 101 permit ip any any router(config)#int s0/0<br />
+  router(config-if)#ip access-group 101 in 例3： <br />
+  router(config)#access-list 102 deny tcp any 10.65.0.2 0.0.0.0 eq 80<br />
+  router(config)#access-list 102 permit ip any any router(config)#interface s0/1<br />
+  router(config-if)#ip access-group 102 out </p>
+<p>删除访问控制例表:<br />
+  router(config)#no access-list 102<br />
+  router(config-if)#no ip access-group 101 in <br />
+  路由器的nat配置 <br />
+  Router(config-if)#ip nat inside ；当前接口指定为内部接口 Router(config-if)#ip nat outside ； </p>
+<p>当前接口指定为外部接口 <br />
+  Router(config)#ip nat inside source static [p] [port] Router(config)#ip nat inside source static 10.65.1.2 60.1.1.1 Router(config)#ip nat inside source static tcp 10.65.1.3 80 60.1.1.1 80<br />
+  Router(config)#ip nat pool p1 60.1.1.1 60.1.1.20 255.255.255.0</p>
+<p>Router(config)#ip nat inside source list 1 pool p1 Router(config)#ip nat inside destination list 2 pool p2 Router(config)#ip nat inside source list 2 interface s0/0 overload <br />
+  Router(config)#ip nat pool p2 10.65.1.2 10.65.1.4 255.255.255.0 type rotary<br />
+  Router#show ip nat translation<br />
+  rotary 参数是轮流的意思，地址池中的IP轮流与NAT分配的地址匹配。 overload参数用于PAT 将内部IP映射到一个公网IP不同的端口上。 <br />
+  外部网关协议配置 <br />
+  routerA(config)#router bgp 100<br />
+  routerA(config-router)#network 19.0.0.0<br />
+  routerA(config-router)#neighbor 8.1.1.2 remote-as 200 <br />
+  配置PPP验证： <br />
+  RouterA(config)#username password RouterA(config)#int s0<br />
+  RouterA(config-if)#ppp authentication {chap|pap} </p>
+<p>3．PIX防火墙命令 <br />
+  Pix525(config)#nameif ethernet0 outside security0 ；命名接口和级别 <br />
+  Pix525(config)#interface ethernet0 auto ；设置接口方式 Pix525(config)#interface ethernet1 100full ；设置接口方式 Pix525(config)#interface ethernet1 100full shutdown Pix525(config)#ip address inside 192.168.0.1 255.255.255.0 Pix525(config)#ip address outside 133.0.0.1 255.255.255.252 <br />
+  Pix525(config)#global (if_name) natid ip-ip ；定义公网IP区间 Pix525(config)#global (outside) 1 7.0.0.1-7.0.0.15 ；例句 Pix525(config)#global (outside) 1 133.0.0.1；例句 Pix525(config)#no global (outside) 1 133.0.0.1 ；去掉设置 <br />
+  Pix525(config)#nat (if_name) nat_id local_ip [netmark] Pix525(config)#nat (inside) 1 0 0<br />
+  内网所有主机(0代表0.0.0.0)可以访问global 1指定的外网。 Pix525(config)#nat (inside) 1 172.16.5.0 255.255.0.0 内网172.16.5.0/16网段的主机可以访问global 1指定的外网。 <br />
+  Pix525(config)#route if_name 0 0 gateway_ip [metric] ；命令格式 <br />
+  Pix525(config)#route outside 0 0 133.0.0.1 1 ；例句 <br />
+  Pix525(config)#route inside 10.1.0.0 255.255.0.0 10.8.0.1 1 ；例句 <br />
+  Pix525(config)#static (inside， outside) 133.0.0.1 192.168.0.8 表示内部ip地址192.168.0.8，访问外部时被翻译成133.0.0.1全局地址。 <br />
+  Pix525(config)#static (dmz， outside) 133.0.0.1 172.16.0.8 中间区域ip地址172.16.0.8，访问外部时被翻译成133.0.0.1全局地址。 <br />
+</p>
+<p>&nbsp;</p>
+<p></p>
+</body>
+</html>
