@@ -1,0 +1,23 @@
+$(document).ready(function(){
+                      $("#cisco").click(function(){
+                                         $('#content').load('./pages/cisco.html');
+                                   });
+                      $("#cmd").click(function(){
+                                         $('#content').load('./pages/cmd.html');
+                                   });
+                      $("#ip").click(function(){
+                                         $('#content').load('./pages/IP.html');
+                                   });
+                      $("#linux").click(function(){
+                                         $('#content').load('./pages/linux.html');
+                                   });
+                      $("#pc").click(function(){
+                                         $('#content').load('./pages/pc.html');
+                                   });
+                        $("#switch").click(function(){
+                                         $('#content').load('./pages/switch.html');
+                                   });
+                         $("#concepts").click(function(){
+                                         $('#content').load('./pages/concepts.html');
+                                   });                      
+                  })
